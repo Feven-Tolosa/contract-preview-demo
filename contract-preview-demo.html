@@ -1,33 +1,151 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
   <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Contract Preview Demo</title>
     <style>
       body {
-        font-family: Arial;
-        max-width: 500px;
-        margin: 20px auto;
+        font-family: 'Segoe UI', sans-serif;
+        line-height: 1.6;
+        max-width: 800px;
+        margin: 0 auto;
+        padding: 20px;
+        color: #333;
       }
-      #preview {
-        margin-top: 20px;
-        padding: 10px;
-        border: 1px dashed #ccc;
+      .form-group {
+        margin-bottom: 15px;
+      }
+      label {
+        display: block;
+        margin-bottom: 5px;
+        font-weight: 600;
+      }
+      input,
+      select {
+        width: 100%;
+        padding: 8px;
+        border: 1px solid #ddd;
+        border-radius: 4px;
+        box-sizing: border-box;
+      }
+      button {
+        background-color: #4caf50;
+        color: white;
+        padding: 10px 15px;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+        font-size: 16px;
+        margin-top: 10px;
+      }
+      button:hover {
+        background-color: #45a049;
+      }
+      #contractPreview {
+        margin-top: 30px;
+        padding: 20px;
+        border: 1px solid #eee;
+        border-radius: 5px;
+        background-color: #f9f9f9;
+      }
+      @media (max-width: 600px) {
+        body {
+          padding: 10px;
+        }
       }
     </style>
   </head>
   <body>
-    <h3>Demo: Contract Preview</h3>
-    <input type="text" id="clientName" placeholder="Client Name" />
-    <button onclick="showPreview()">Generate Preview</button>
-    <div id="preview"></div>
+    <h2>Contract Preview Generator</h2>
+
+    <div class="form-group">
+      <label for="clientName">Client Name:</label>
+      <input type="text" id="clientName" placeholder="Enter client name" />
+    </div>
+
+    <div class="form-group">
+      <label for="contractDate">Date:</label>
+      <input type="date" id="contractDate" />
+    </div>
+
+    <div class="form-group">
+      <label for="serviceType">Service Type:</label>
+      <select id="serviceType">
+        <option value="web">Web Development</option>
+        <option value="design">Graphic Design</option>
+        <option value="consulting">Consulting</option>
+      </select>
+    </div>
+
+    <div class="form-group">
+      <label for="contractAmount">Amount ($):</label>
+      <input type="number" id="contractAmount" placeholder="Enter amount" />
+    </div>
+
+    <button onclick="generateContract()">Generate Contract Preview</button>
+
+    <div id="contractPreview"></div>
 
     <script>
-      function showPreview() {
-        const name = document.getElementById('clientName').value
-        document.getElementById('preview').innerHTML = `
-        <h4>CONTRACT PREVIEW</h4>
-        <p>This agreement is made with <strong>${name}</strong>...</p>
-      `
+      function generateContract() {
+        // Get form values
+        const clientName =
+          document.getElementById('clientName').value || '[Client Name]'
+        const contractDate =
+          document.getElementById('contractDate').value || '[Date]'
+        const serviceType = document.getElementById('serviceType').value
+        const amount =
+          document.getElementById('contractAmount').value || '[Amount]'
+
+        // Format date
+        const formattedDate =
+          contractDate !== '[Date]'
+            ? new Date(contractDate).toLocaleDateString('en-US', {
+                year: 'numeric',
+                month: 'long',
+                day: 'numeric',
+              })
+            : '[Date]'
+
+        // Service type mapping
+        const serviceTypes = {
+          web: 'Web Development Services',
+          design: 'Graphic Design Services',
+          consulting: 'Consulting Services',
+        }
+
+        // Generate contract preview
+        document.getElementById('contractPreview').innerHTML = `
+                <h3>CONTRACT AGREEMENT</h3>
+                <p>This Agreement is made and entered into as of ${formattedDate}, by and between:</p>
+                
+                <h4>Company Name</h4>
+                <p>123 Business Street<br>City, State 10001</p>
+                
+                <h4>AND</h4>
+                
+                <h4>${clientName}</h4>
+                <p>[Client Address]</p>
+                
+                <h4>Service Description</h4>
+                <p>${serviceTypes[serviceType]} as described in attached Statement of Work.</p>
+                
+                <h4>Payment Terms</h4>
+                <p>Total contract amount: $${amount} to be paid as follows: [Payment terms].</p>
+                
+                <p style="margin-top: 20px;"><strong>Signed:</strong></p>
+                <div style="display: flex; justify-content: space-between; margin-top: 40px;">
+                    <div>
+                        <p>___________________________</p>
+                        <p>Company Representative</p>
+                    </div>
+                    <div>
+                        <p>___________________________</p>
+                        <p>${clientName}</p>
+                    </div>
+                </div>
+            `
       }
     </script>
   </body>
