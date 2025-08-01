@@ -89,6 +89,13 @@
     // Add these buttons:
     <button onclick="saveDraft()">Save Draft</button>
     <button onclick="loadDraft()">Load Draft</button>
+    // Add to HTML:
+    <label for="template">Template:</label>
+    <select id="template" onchange="changeTemplate()">
+      <option value="simple">Simple Agreement</option>
+      <option value="nda">NDA</option>
+      <option value="service">Service Contract</option>
+    </select>
 
     <script>
       function generateContract() {
@@ -219,6 +226,13 @@
 
       // Call this on page load
       window.addEventListener('DOMContentLoaded', loadDraft)
+
+      // Add to JS:
+      function changeTemplate() {
+        const template = document.getElementById('template').value
+        // You can add different template logic here
+        console.log('Selected template:', template)
+      }
     </script>
   </body>
 </html>
