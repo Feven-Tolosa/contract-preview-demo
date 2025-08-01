@@ -147,6 +147,20 @@
                 </div>
             `
       }
+      // Add this to your script
+      function validateForm() {
+        const name = document.getElementById('clientName').value
+        if (!name) {
+          alert('Please enter client name')
+          return false
+        }
+        return true
+      }
+
+      // Update your button to:
+      ;<button onclick='if(validateForm()) generateContract()'>
+        Generate Contract Preview
+      </button>
     </script>
   </body>
 </html>
