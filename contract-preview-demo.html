@@ -86,6 +86,9 @@
     <button onclick="generateContract()">Generate Contract Preview</button>
 
     <div id="contractPreview"></div>
+    // Add these buttons:
+    <button onclick="saveDraft()">Save Draft</button>
+    <button onclick="loadDraft()">Load Draft</button>
 
     <script>
       function generateContract() {
@@ -191,6 +194,31 @@
       ;<button onclick='exportToPDF()' style='margin-top: 10px;'>
         Export as PDF
       </button>
+      // Save draft
+      function saveDraft() {
+        const formData = {
+          name: document.getElementById('clientName').value,
+          date: document.getElementById('contractDate').value,
+          service: document.getElementById('serviceType').value,
+          amount: document.getElementById('contractAmount').value,
+        }
+        sessionStorage.setItem('contractDraft', JSON.stringify(formData))
+        alert('Draft saved (session only)')
+      }
+
+      // Load draft
+      function loadDraft() {
+        const draft = JSON.parse(sessionStorage.getItem('contractDraft'))
+        if (draft) {
+          document.getElementById('clientName').value = draft.name
+          document.getElementById('contractDate').value = draft.date
+          document.getElementById('serviceType').value = draft.service
+          document.getElementById('contractAmount').value = draft.amount
+        }
+      }
+
+      // Call this on page load
+      window.addEventListener('DOMContentLoaded', loadDraft)
     </script>
   </body>
 </html>
