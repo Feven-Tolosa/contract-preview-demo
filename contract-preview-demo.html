@@ -150,7 +150,43 @@
       <p>Total: $<span id="total">0</span></p>
     </div>
 
+    <div class="pricing">
+      <h4>Fee Calculator</h4>
+      <label><input type="checkbox" id="rushFee" /> Rush Fee (+20%)</label>
+      <label><input type="checkbox" id="taxable" /> Include Tax (8%)</label>
+      <p>Subtotal: $<span id="subtotal">0</span></p>
+      <p>Total: $<span id="total">0</span></p>
+    </div>
+
     <script>
+      document
+        .getElementById('contractAmount')
+        .addEventListener('input', calculateFees)
+      document
+        .getElementById('rushFee')
+        .addEventListener('change', calculateFees)
+      document
+        .getElementById('taxable')
+        .addEventListener('change', calculateFees)
+
+      function calculateFees() {
+        const amount =
+          parseFloat(document.getElementById('contractAmount').value) || 0
+        let subtotal = amount
+
+        if (document.getElementById('rushFee').checked) {
+          subtotal *= 1.2
+        }
+
+        document.getElementById('subtotal').textContent = subtotal.toFixed(2)
+
+        let total = subtotal
+        if (document.getElementById('taxable').checked) {
+          total *= 1.08
+        }
+
+        document.getElementById('total').textContent = total.toFixed(2)
+      }
       document
         .getElementById('contractAmount')
         .addEventListener('input', calculateFees)
