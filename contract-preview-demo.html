@@ -128,7 +128,59 @@
       <option value="service">Service Contract</option>
     </select>
 
+    <div class="signature-section">
+      <h4>Signature</h4>
+      <canvas
+        id="signaturePad"
+        width="300"
+        height="150"
+        style="border: 1px solid #ddd; cursor: crosshair"
+      ></canvas>
+      <div>
+        <button onclick="clearSignature()">Clear</button>
+        <button onclick="saveSignature()">Save</button>
+      </div>
+    </div>
     <script>
+      let isDrawing = false
+      const canvas = document.getElementById('signaturePad')
+      const ctx = canvas.getContext('2d')
+
+      canvas.addEventListener('mousedown', startDrawing)
+      canvas.addEventListener('mousemove', draw)
+      canvas.addEventListener('mouseup', stopDrawing)
+
+      function startDrawing(e) {
+        isDrawing = true
+        draw(e)
+      }
+
+      function draw(e) {
+        if (!isDrawing) return
+        ctx.lineWidth = 2
+        ctx.lineCap = 'round'
+        ctx.strokeStyle = '#000'
+
+        ctx.lineTo(e.offsetX, e.offsetY)
+        ctx.stroke()
+        ctx.beginPath()
+        ctx.moveTo(e.offsetX, e.offsetY)
+      }
+
+      function stopDrawing() {
+        isDrawing = false
+        ctx.beginPath()
+      }
+
+      function clearSignature() {
+        ctx.clearRect(0, 0, canvas.width, canvas.height)
+      }
+
+      function saveSignature() {
+        // Can convert to image: canvas.toDataURL()
+        alert('Signature saved!')
+      }
+
       function addClause() {
         const clauseType = document.getElementById('clauseType').value
         const clauses = {
