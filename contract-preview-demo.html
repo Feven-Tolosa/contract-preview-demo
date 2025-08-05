@@ -69,6 +69,23 @@
         background-color: #333;
         border-color: #444;
       }
+      #itemTable {
+        width: 100%;
+        border-collapse: collapse;
+      }
+      #itemTable th {
+        background: #f5f5f5;
+        text-align: left;
+      }
+      #itemTable td,
+      #itemTable th {
+        padding: 8px;
+        border: 1px solid #ddd;
+      }
+      #itemTable input {
+        width: 100%;
+        box-sizing: border-box;
+      }
       @media (max-width: 600px) {
         body {
           padding: 10px;
@@ -158,7 +175,50 @@
       <p>Total: $<span id="total">0</span></p>
     </div>
 
+    <div class="item-grid">
+      <h4>Items</h4>
+      <table id="itemTable">
+        <thead>
+          <tr>
+            <th>Description</th>
+            <th>Qty</th>
+            <th>Price</th>
+            <th>Total</th>
+          </tr>
+        </thead>
+        <tbody>
+          <!-- Dynamic rows will appear here -->
+        </tbody>
+      </table>
+      <button onclick="addRow()">+ Add Item</button>
+    </div>
     <script>
+      function addRow() {
+        const tbody = document.querySelector('#itemTable tbody')
+        const row = document.createElement('tr')
+        row.innerHTML = `
+        <td><input type="text" placeholder="Description"></td>
+        <td><input type="number" class="qty" value="1"></td>
+        <td><input type="number" class="price" placeholder="0.00"></td>
+        <td class="row-total">$0.00</td>
+    `
+        tbody.appendChild(row)
+
+        // Add live calculation
+        row.querySelectorAll('input').forEach((input) => {
+          input.addEventListener('input', calculateRowTotals)
+        })
+      }
+
+      function calculateRowTotals() {
+        document.querySelectorAll('#itemTable tbody tr').forEach((row) => {
+          const qty = parseFloat(row.querySelector('.qty').value) || 0
+          const price = parseFloat(row.querySelector('.price').value) || 0
+          row.querySelector('.row-total').textContent = `$${(
+            qty * price
+          ).toFixed(2)}`
+        })
+      }
       document
         .getElementById('contractAmount')
         .addEventListener('input', calculateFees)
