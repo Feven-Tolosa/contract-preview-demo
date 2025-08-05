@@ -141,44 +141,82 @@
         <button onclick="saveSignature()">Save</button>
       </div>
     </div>
+
+    <div class="pricing">
+      <h4>Fee Calculator</h4>
+      <label><input type="checkbox" id="rushFee" /> Rush Fee (+20%)</label>
+      <label><input type="checkbox" id="taxable" /> Include Tax (8%)</label>
+      <p>Subtotal: $<span id="subtotal">0</span></p>
+      <p>Total: $<span id="total">0</span></p>
+    </div>
+
     <script>
-      let isDrawing = false
-      const canvas = document.getElementById('signaturePad')
-      const ctx = canvas.getContext('2d')
+      document
+        .getElementById('contractAmount')
+        .addEventListener('input', calculateFees)
+      document
+        .getElementById('rushFee')
+        .addEventListener('change', calculateFees)
+      document
+        .getElementById('taxable')
+        .addEventListener('change', calculateFees)
 
-      canvas.addEventListener('mousedown', startDrawing)
-      canvas.addEventListener('mousemove', draw)
-      canvas.addEventListener('mouseup', stopDrawing)
+      function calculateFees() {
+        const amount =
+          parseFloat(document.getElementById('contractAmount').value) || 0
+        let subtotal = amount
 
-      function startDrawing(e) {
-        isDrawing = true
-        draw(e)
-      }
+        if (document.getElementById('rushFee').checked) {
+          subtotal *= 1.2
+        }
 
-      function draw(e) {
-        if (!isDrawing) return
-        ctx.lineWidth = 2
-        ctx.lineCap = 'round'
-        ctx.strokeStyle = '#000'
+        document.getElementById('subtotal').textContent = subtotal.toFixed(2)
 
-        ctx.lineTo(e.offsetX, e.offsetY)
-        ctx.stroke()
-        ctx.beginPath()
-        ctx.moveTo(e.offsetX, e.offsetY)
-      }
+        let total = subtotal
+        if (document.getElementById('taxable').checked) {
+          total *= 1.08
+        }
 
-      function stopDrawing() {
-        isDrawing = false
-        ctx.beginPath()
-      }
+        document.getElementById('total').textContent = total.toFixed(2)
 
-      function clearSignature() {
-        ctx.clearRect(0, 0, canvas.width, canvas.height)
-      }
+        let isDrawing = false
+        const canvas = document.getElementById('signaturePad')
+        const ctx = canvas.getContext('2d')
 
-      function saveSignature() {
-        // Can convert to image: canvas.toDataURL()
-        alert('Signature saved!')
+        canvas.addEventListener('mousedown', startDrawing)
+        canvas.addEventListener('mousemove', draw)
+        canvas.addEventListener('mouseup', stopDrawing)
+
+        function startDrawing(e) {
+          isDrawing = true
+          draw(e)
+        }
+
+        function draw(e) {
+          if (!isDrawing) return
+          ctx.lineWidth = 2
+          ctx.lineCap = 'round'
+          ctx.strokeStyle = '#000'
+
+          ctx.lineTo(e.offsetX, e.offsetY)
+          ctx.stroke()
+          ctx.beginPath()
+          ctx.moveTo(e.offsetX, e.offsetY)
+        }
+
+        function stopDrawing() {
+          isDrawing = false
+          ctx.beginPath()
+        }
+
+        function clearSignature() {
+          ctx.clearRect(0, 0, canvas.width, canvas.height)
+        }
+
+        function saveSignature() {
+          // Can convert to image: canvas.toDataURL()
+          alert('Signature saved!')
+        }
       }
 
       function addClause() {
@@ -225,35 +263,35 @@
 
         // Generate contract preview
         document.getElementById('contractPreview').innerHTML = `
-                <h3>CONTRACT AGREEMENT</h3>
-                <p>This Agreement is made and entered into as of ${formattedDate}, by and between:</p>
-                
-                <h4>Company Name</h4>
-                <p>123 Business Street<br>City, State 10001</p>
-                
-                <h4>AND</h4>
-                
-                <h4>${clientName}</h4>
-                <p>[Client Address]</p>
-                
-                <h4>Service Description</h4>
-                <p>${serviceTypes[serviceType]} as described in attached Statement of Work.</p>
-                
-                <h4>Payment Terms</h4>
-                <p>Total contract amount: $${amount} to be paid as follows: [Payment terms].</p>
-                
-                <p style="margin-top: 20px;"><strong>Signed:</strong></p>
-                <div style="display: flex; justify-content: space-between; margin-top: 40px;">
-                    <div>
-                        <p>___________________________</p>
-                        <p>Company Representative</p>
-                    </div>
-                    <div>
-                        <p>___________________________</p>
-                        <p>${clientName}</p>
-                    </div>
-                </div>
-            `
+                      <h3>CONTRACT AGREEMENT</h3>
+                      <p>This Agreement is made and entered into as of ${formattedDate}, by and between:</p>
+
+                      <h4>Company Name</h4>
+                      <p>123 Business Street<br>City, State 10001</p>
+
+                      <h4>AND</h4>
+
+                      <h4>${clientName}</h4>
+                      <p>[Client Address]</p>
+
+                      <h4>Service Description</h4>
+                      <p>${serviceTypes[serviceType]} as described in attached Statement of Work.</p>
+
+                      <h4>Payment Terms</h4>
+                      <p>Total contract amount: $${amount} to be paid as follows: [Payment terms].</p>
+
+                      <p style="margin-top: 20px;"><strong>Signed:</strong></p>
+                      <div style="display: flex; justify-content: space-between; margin-top: 40px;">
+                          <div>
+                              <p>___________________________</p>
+                              <p>Company Representative</p>
+                          </div>
+                          <div>
+                              <p>___________________________</p>
+                              <p>${clientName}</p>
+                          </div>
+                      </div>
+                  `
       }
       function validateForm() {
         const name = document.getElementById('clientName').value
