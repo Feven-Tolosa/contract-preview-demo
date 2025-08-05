@@ -86,6 +86,34 @@
         width: 100%;
         box-sizing: border-box;
       }
+      .steps {
+        display: flex;
+        margin: 20px 0;
+      }
+      .step {
+        flex: 1;
+        text-align: center;
+        padding: 10px;
+        background: #f0f0f0;
+        position: relative;
+      }
+      .step:not(:last-child):after {
+        content: '';
+        position: absolute;
+        top: 50%;
+        right: -15px;
+        border-top: 15px solid transparent;
+        border-bottom: 15px solid transparent;
+        border-left: 15px solid #f0f0f0;
+        z-index: 1;
+      }
+      .step.active {
+        background: #4caf50;
+        color: white;
+      }
+      .step.active:not(:last-child):after {
+        border-left-color: #4caf50;
+      }
       @media (max-width: 600px) {
         body {
           padding: 10px;
@@ -192,7 +220,29 @@
       </table>
       <button onclick="addRow()">+ Add Item</button>
     </div>
+
+    <div class="status-tracker">
+      <h4>Contract Status</h4>
+      <div class="steps">
+        <div class="step active">Draft</div>
+        <div class="step">Review</div>
+        <div class="step">Sign</div>
+        <div class="step">Complete</div>
+      </div>
+      <button onclick="nextStep()">Next Step</button>
+    </div>
+
     <script>
+      let currentStep = 0
+      const steps = document.querySelectorAll('.step')
+
+      function nextStep() {
+        if (currentStep < steps.length - 1) {
+          steps[currentStep].classList.remove('active')
+          currentStep++
+          steps[currentStep].classList.add('active')
+        }
+      }
       function addRow() {
         const tbody = document.querySelector('#itemTable tbody')
         const row = document.createElement('tr')
